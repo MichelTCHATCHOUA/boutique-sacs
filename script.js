@@ -126,3 +126,42 @@ document.addEventListener('DOMContentLoaded', function(){
     })();
   }
 });
+
+// Carousel: auto-scroll, arrows, pause on hover
+document.addEventListener('DOMContentLoaded', function(){
+  const carousel = document.getElementById('heroCarousel');
+  if(!carousel) return;
+  const slides = Array.from(carousel.querySelectorAll('.slide'));
+  const nextBtn = carousel.querySelector('.next');
+  const prevBtn = carousel.querySelector('.prev');
+  let current = slides.findIndex(s=>s.classList.contains('active')) || 0;
+  const total = slides.length;
+  const interval = 4500;
+  let timer = null;
+
+  function goTo(index){
+    slides.forEach((s,i)=> s.classList.toggle('active', i===index));
+    current = index;
+  }
+  function next(){ goTo((current+1) % total); }
+  function prev(){ goTo((current-1+total) % total); }
+  function start(){ stop(); timer = setInterval(next, interval); }
+  function stop(){ if(timer) clearInterval(timer); timer = null; }
+  function reset(){ start(); }
+
+  nextBtn && nextBtn.addEventListener('click', ()=>{ next(); reset(); });
+  prevBtn && prevBtn.addEventListener('click', ()=>{ prev(); reset(); });
+
+  carousel.addEventListener('mouseenter', stop);
+  carousel.addEventListener('mouseleave', start);
+
+  // keyboard navigation
+  document.addEventListener('keydown', function(e){
+    if(document.activeElement && (document.activeElement.tagName==='INPUT' || document.activeElement.tagName==='TEXTAREA')) return;
+    if(e.key === 'ArrowRight') { next(); reset(); }
+    if(e.key === 'ArrowLeft') { prev(); reset(); }
+  });
+
+  // start auto-scroll
+  start();
+});

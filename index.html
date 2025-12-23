@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ma boutique de sacs</title>
+  <title>DAP's Store</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
     <div class="brand">
-      <h1 style="font-size:1.8rem">Ma boutique de sacs</h1>
+      <h1 style="font-size:1.8rem">DAP's Store</h1>
       <div class="nav-wrap">
         <a href="#sacs">Sacs</a>
         <a href="#about">À propos</a>
@@ -26,7 +26,28 @@
       <a class="cta" href="#sacs">Voir la collection</a>
     </div>
     <div class="hero-image">
-      <img src="https://images.unsplash.com/photo-1526178613159-3a1b3e0cde3e?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b2fe08c8a9f6dc7b2b9970a9b3cdd7a" alt="Sacs élégants">
+      <div class="carousel" id="heroCarousel" aria-roledescription="carousel">
+        <div class="slides">
+          <div class="slide active">
+            <img src="images/SacsElegants.png" alt="Sacs élégants">
+            <div class="caption"><div class="phrase">Your everyday companion</div></div>
+          </div>
+          <div class="slide">
+            <img src="images/SacMainCuir.png" alt="Sac à main en cuir">
+            <div class="caption"><div class="phrase">Style and durability</div></div>
+          </div>
+          <div class="slide">
+            <img src="images/SacDosSport.png" alt="Sac à dos sport">
+            <div class="caption"><div class="phrase">Your everyday companion</div></div>
+          </div>
+          <div class="slide">
+            <img src="images/SacDeVoyage.png" alt="Sac de voyage">
+            <div class="caption"><div class="phrase">Style and durability</div></div>
+          </div>
+        </div>
+        <button class="arrow prev" aria-label="Previous slide">&lt;</button>
+        <button class="arrow next" aria-label="Next slide">&gt;</button>
+      </div>
     </div>
   </div>
 
@@ -35,7 +56,7 @@
       <h3 class="section-title">Nos produits</h3>
       <div class="products">
         <article class="product">
-          <img src="https://images.unsplash.com/photo-1514996937319-344454492b37?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=6b0e3fd5b8d6b6c6b9e7b6e2c4f6b7d2" alt="Sac à main cuir">
+          <img src="images/SacMainCuir.png" alt="Sac à main cuir">
           <div class="info">
             <h4>Sac à main en cuir</h4>
             <p>Cuir premium, finitions soignées, poche intérieure zippée.</p>
@@ -44,7 +65,7 @@
         </article>
 
         <article class="product">
-          <img src="https://images.unsplash.com/photo-1520975698519-6f3d4e3a0f30?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3c6b4f0a4d8e9f6c1c4b2d2b5d1a9f7a" alt="Sac à dos sport">
+          <img src="images/SacDosSport.png" alt="Sac à dos sport">
           <div class="info">
             <h4>Sac à dos sport</h4>
             <p>Ergonomique, résistant à l'eau, parfait pour sorties et sport.</p>
@@ -53,7 +74,7 @@
         </article>
 
         <article class="product">
-          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=1b9f7d6a2c3e4f5d6b7c8a9b0d1e2f3a" alt="Sac de voyage">
+          <img src="images/SacDeVoyage.png" alt="Sac de voyage">
           <div class="info">
             <h4>Sac de voyage</h4>
             <p>Grande capacité, compartiments pratiques, design élégant.</p>
@@ -101,7 +122,7 @@
   </main>
 
   <footer>
-    <div>© 2024 Ma boutique de sacs • Livraison & retours gratuits</div>
+    <div>© 2024 DAP's Store • Livraison & retours gratuits</div>
   </footer>
 
   <script src="script.js"></script>

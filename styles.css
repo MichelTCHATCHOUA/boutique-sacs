@@ -27,10 +27,23 @@ header a:hover{ background: rgba(255,255,255,0.08) }
 .hero-card p{ color:#445; margin-top:0.6rem }
 .hero-card .cta{ margin-top:1.2rem; display:inline-block; padding:0.7rem 1.2rem; background:linear-gradient(90deg,#6c5ce7,#00b4d8); color:#fff; border-radius:12px; font-weight:700 }
 
-.hero-image{ width:420px; border-radius:18px; overflow:hidden; box-shadow:0 18px 50px rgba(19,20,40,0.08) }
+ .hero-image{ width:420px; border-radius:18px; overflow:hidden; box-shadow:0 18px 50px rgba(19,20,40,0.08) }
 .hero-image img{ display:block; width:100%; height:100%; object-fit:cover }
 
-main{ max-width:1200px; margin: 1rem auto; padding:0 1rem }
+/* Carousel styles */
+.carousel{ position:relative; width:100%; height:100%; }
+.carousel .slides{ position:relative; width:100%; height:100%; }
+.carousel .slide{ position:absolute; inset:0; opacity:0; transition:opacity .8s ease-in-out; display:block }
+.carousel .slide.active{ opacity:1; z-index:2 }
+.carousel .slide img{ width:100%; height:100%; object-fit:cover; display:block }
+.carousel .caption{ position:absolute; left:1rem; bottom:1rem; background:linear-gradient(90deg, rgba(11,19,36,0.85), rgba(11,19,36,0.6)); color:#fff; padding:0.7rem 1rem; border-radius:10px; max-width:85%; }
+.carousel .caption .phrase{ font-weight:800; font-size:1rem }
+.carousel .arrow{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.45); color:#fff; border:none; width:44px; height:44px; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem }
+.carousel .arrow.prev{ left:0.6rem }
+.carousel .arrow.next{ right:0.6rem }
+.carousel .arrow:hover{ background:rgba(0,0,0,0.6) }
+
+@media(max-width:900px){ .hero{ flex-direction:column; gap:1rem } .hero-image{ width:100% } .about{ flex-direction:column } .contact form{ grid-template-columns:1fr } .contact .send{ grid-column:1/2 } .carousel .caption{ left:0.8rem; right:0.8rem; bottom:0.8rem; max-width:unset } .carousel .arrow{ width:40px; height:40px } }main{ max-width:1200px; margin: 1rem auto; padding:0 1rem }
 
 .section-title{ text-align:center; margin:2.5rem 0 1rem; font-size:1.7rem; color:#0b1324 }
 
