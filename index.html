@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="promo-banner">
+    <p>🎉 <strong>-20% sur toute la collection hiver</strong> avec le code <strong>HIVER20</strong></p>
+  </div>
   <header>
     <div class="brand">
       <h1 style="font-size:1.8rem">DAP's Store</h1>
@@ -15,6 +18,8 @@
         <a href="#about">À propos</a>
         <a href="#avis">Avis</a>
         <a href="#contact">Contact</a>
+        <button class="nav-btn" id="userBtn" onclick="openUserModal()" title="Mon compte">👤</button>
+        <button class="nav-btn cart-btn" id="cartBtn" onclick="openCartModal()" title="Panier">🛒 <span id="cartCount" class="cart-badge">0</span></button>
       </div>
     </div>
   </header>
@@ -55,7 +60,7 @@
     <section id="sacs">
       <h3 class="section-title">Nos produits</h3>
       <div class="products">
-        <article class="product">
+        <article class="product" data-id="1" data-name="Sac à main en cuir" data-price="89" data-description="Sac à main premium en cuir véritable. Dimensions: 35x28x12cm. Poche intérieure zippée, finitions soignées, anse ajustable. Parfait pour le travail et sorties. Garanti 2 ans.">
           <img src="Images/SacMainCuir.png" alt="Sac à main cuir">
           <div class="info">
             <h4>Sac à main en cuir</h4>
@@ -64,7 +69,7 @@
           </div>
         </article>
 
-        <article class="product">
+        <article class="product" data-id="2" data-name="Sac à dos sport" data-price="59" data-description="Sac à dos ergonomique et moderne. Dimensions: 45x30x15cm. Résistant à l'eau, compartiments multiples, bretelles rembourrées ajustables. Idéal pour le sport, les sorties et les randonnées. Capacité 25L.">
           <img src="Images/SacDosSport.png" alt="Sac à dos sport">
           <div class="info">
             <h4>Sac à dos sport</h4>
@@ -73,7 +78,7 @@
           </div>
         </article>
 
-        <article class="product">
+        <article class="product" data-id="3" data-name="Sac de voyage" data-price="119" data-description="Grand sac de voyage en toile résistante. Dimensions: 60x40x25cm. Capacité 65L, compartiments pratiques, design élégant et intemporel. Poignées renforcées, bretelle de transport. Parfait pour week-ends et voyages.">
           <img src="Images/SacDeVoyage.png" alt="Sac de voyage">
           <div class="info">
             <h4>Sac de voyage</h4>
@@ -81,6 +86,33 @@
             <div class="price-row"><div class="price">€119</div><button class="buy">Acheter</button></div>
           </div>
         </article>
+
+        <article class="product" data-id="4" data-name="Sacs élégants collection" data-price="75" data-description="Collection exclusive de sacs élégants et intemporels. Dimensions: 40x30x15cm. Parfait pour toutes les occasions, du travail aux sorties. Matériaux de qualité premium, design sophistiqué. Disponible en plusieurs coloris.">
+          <img src="Images/SacsElegants.png" alt="Sacs élégants">
+          <div class="info">
+            <h4>Sacs élégants collection</h4>
+            <p>Collection exclusive, design sophistiqué, tous les styles.</p>
+            <div class="price-row"><div class="price">€75</div><button class="buy">Acheter</button></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="counters-section" id="counters">
+      <h3 class="section-title" style="color:#fff;margin:0 0 1rem 0">Nos chiffres</h3>
+      <div class="counters-grid">
+        <div class="counter-box">
+          <div class="counter-number" data-target="500">0</div>
+          <div class="counter-label">Clients satisfaits</div>
+        </div>
+        <div class="counter-box">
+          <div class="counter-number" data-target="2">0</div>
+          <div class="counter-label">Ans de garantie</div>
+        </div>
+        <div class="counter-box">
+          <div class="counter-number" data-target="30">0</div>
+          <div class="counter-label">Jours retours gratuits</div>
+        </div>
       </div>
     </section>
 
@@ -109,7 +141,7 @@
     <section id="contact" class="contact">
       <h3 class="section-title">Contact & Retours</h3>
       <div style="display:grid;gap:1rem">
-        <div style="color:#556">Des questions ? Envoyez-nous un message via le formulaire ci-dessous ou écrivez à <strong>contact@boutique-sacs.example</strong></div>
+        <div style="color:#556">Des questions ? Envoyez-nous un message via le formulaire ci-dessous ou écrivez à <strong>angepriscilledjougo40@gmail.com</strong></div>
         <form id="contactForm">
           <input type="text" name="nom" placeholder="Votre nom" required>
           <input type="email" name="email" placeholder="Votre email" required>
@@ -124,6 +156,180 @@
   <footer>
     <div>© 2024 DAP's Store • Livraison & retours gratuits</div>
   </footer>
+
+  <!-- Cart Modal -->
+  <div id="cartModal" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeCartModal()"></div>
+    <div class="modal-content cart-modal-content">
+      <button class="modal-close" onclick="closeCartModal()">&times;</button>
+      <h2 style="margin:0 0 1.5rem 0">Mon Panier</h2>
+      <div id="cartItems" class="cart-items">
+        <p style="color:#999;text-align:center;padding:2rem">Votre panier est vide</p>
+      </div>
+      <div class="cart-summary" id="cartSummary" style="display:none;">
+        <div class="cart-total"><span>Sous-total :</span> <strong id="subtotal">€0</strong></div>
+        <div class="cart-total"><span>Livraison :</span> <strong>Gratuit</strong></div>
+        <div class="cart-total" style="border-top:1px solid #e6e9f2;padding-top:1rem;margin-top:1rem;font-size:1.2rem"><span>Total :</span> <strong id="total">€0</strong></div>
+        <button class="btn-checkout">Procéder au paiement</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Account Modal -->
+  <div id="userModal" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeUserModal()"></div>
+    <div class="modal-content user-modal-content">
+      <button class="modal-close" onclick="closeUserModal()">&times;</button>
+      <div class="auth-tabs">
+        <button class="tab-btn active" onclick="switchAuthTab('login')">Connexion</button>
+        <button class="tab-btn" onclick="switchAuthTab('register')">Inscription</button>
+      </div>
+
+      <!-- Login Tab -->
+      <div id="loginTab" class="auth-tab active">
+        <h2>Connexion</h2>
+        <form id="loginForm">
+          <input type="email" placeholder="Email" required>
+          <input type="password" placeholder="Mot de passe" required>
+          <button type="submit" class="btn-auth">Se connecter</button>
+        </form>
+        <div id="loginMessage" style="margin-top:1rem;"></div>
+      </div>
+
+      <!-- Register Tab -->
+      <div id="registerTab" class="auth-tab" style="display:none;">
+        <h2>Inscription</h2>
+        <form id="registerForm">
+          <input type="text" placeholder="Prénom(s)" required>
+          <input type="text" placeholder="Nom(s)" required>
+          <input type="email" placeholder="Email" required>
+          <select id="countrySelect" required onchange="updatePhoneCode(this)">
+            <option value="">Sélectionner un pays</option>
+            <option value="+33|FR">France (+33)</option>
+            <option value="+32|BE">Belgique (+32)</option>
+            <option value="+41|CH">Suisse (+41)</option>
+            <option value="+1|CA">Canada (+1)</option>
+            <option value="+49|DE">Allemagne (+49)</option>
+            <option value="+34|ES">Espagne (+34)</option>
+            <option value="+39|IT">Italie (+39)</option>
+            <option value="+31|NL">Pays-Bas (+31)</option>
+            <option value="+43|AT">Autriche (+43)</option>
+            <option value="+1|US">États-Unis (+1)</option>
+            <option value="|OTHER">Autre</option>
+          </select>
+          <div class="phone-input-wrapper">
+            <span id="phonePrefix" class="phone-prefix"></span>
+            <input type="tel" placeholder="Numéro de téléphone" id="phoneInput" required>
+          </div>
+          <input type="password" placeholder="Mot de passe (min. 6 caractères)" required minlength="6">
+          <input type="password" placeholder="Confirmer mot de passe" required>
+          <button type="submit" class="btn-auth">S'inscrire</button>
+        </form>
+        <div id="registerMessage" style="margin-top:1rem;"></div>
+      </div>
+
+      <!-- Logged In View -->
+      <div id="loggedInView" style="display:none;">
+        <h2>Profil</h2>
+        <div class="user-info">
+          <p><strong>Nom :</strong> <span id="userDisplayName"></span></p>
+          <p><strong>Email :</strong> <span id="userDisplayEmail"></span></p>
+          <p><strong>Pays :</strong> <span id="userDisplayCountry"></span></p>
+          <p><strong>Téléphone :</strong> <span id="userDisplayPhone"></span></p>
+        </div>
+        <button class="btn-logout" onclick="logout()">Se déconnecter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Guide Modal -->
+  <div id="sizeGuideModal" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeSizeGuide()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeSizeGuide()">&times;</button>
+      <h2>Guide des Tailles</h2>
+      <p style="color:#556;margin:0 0 1.5rem 0;line-height:1.6">Trouvez la taille de sac parfaite pour vos besoins. Chaque taille offre une capacité et des dimensions spécifiques adaptées à différents usages. Consultez les détails ci-dessous pour choisir le sac qui vous convient le mieux.</p>
+      <div class="size-guide-content">
+        <div class="size-guide-item">
+          <h4>Taille S (Petit)</h4>
+          <p><strong>Dimensions :</strong> 30x25x10cm</p>
+          <p><strong>Capacité :</strong> 10-15L</p>
+          <p><strong>Idéal pour :</strong> Sorties courtes, documents, petits objets du quotidien</p>
+          <p><strong>Porter :</strong> À l'épaule ou en bandoulière</p>
+        </div>
+
+        <div class="size-guide-item">
+          <h4>Taille M (Moyen)</h4>
+          <p><strong>Dimensions :</strong> 35x30x12cm</p>
+          <p><strong>Capacité :</strong> 15-20L</p>
+          <p><strong>Idéal pour :</strong> Travail, sorties quotidiennes, petits voyages</p>
+          <p><strong>Porter :</strong> À l'épaule, en bandoulière ou à la main</p>
+        </div>
+
+        <div class="size-guide-item">
+          <h4>Taille L (Grand)</h4>
+          <p><strong>Dimensions :</strong> 40x35x15cm</p>
+          <p><strong>Capacité :</strong> 20-30L</p>
+          <p><strong>Idéal pour :</strong> Sorties étendues, petits week-ends, cours/travail intensif</p>
+          <p><strong>Porter :</strong> À l'épaule, en bandoulière ou à dos</p>
+        </div>
+
+        <div class="size-guide-item">
+          <h4>Taille XL (Très Grand)</h4>
+          <p><strong>Dimensions :</strong> 50x40x20cm</p>
+          <p><strong>Capacité :</strong> 30-50L</p>
+          <p><strong>Idéal pour :</strong> Voyages, week-ends, pique-niques, sorties en famille</p>
+          <p><strong>Porter :</strong> À l'épaule (bretelles rembourrées) ou à dos</p>
+        </div>
+      </div>
+      <button class="btn-close-guide" onclick="closeSizeGuide()">Fermer</button>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <div id="productModal" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeProductModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeProductModal()">&times;</button>
+      <div class="modal-body">
+        <div class="modal-image">
+          <img id="modalImage" src="" alt="">
+        </div>
+        <div class="modal-details">
+          <h2 id="modalTitle"></h2>
+          <p id="modalDescription"></p>
+          <div class="modal-price" id="modalPrice"></div>
+          
+          <div class="color-selector">
+            <label>Choisir la couleur :</label>
+            <div class="color-options">
+              <button class="color-btn" data-color="Noir" style="background:#000" title="Noir"></button>
+              <button class="color-btn" data-color="Marron" style="background:#8B4513" title="Marron"></button>
+              <button class="color-btn" data-color="Gris" style="background:#808080" title="Gris"></button>
+              <button class="color-btn" data-color="Beige" style="background:#F5DEB3" title="Beige"></button>
+            </div>
+            <span id="colorError" style="color:red;display:none;font-size:0.9rem;margin-top:0.5rem;">Veuillez sélectionner une couleur</span>
+          </div>
+
+          <div class="size-selector">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label>Choisir la taille :</label>
+              <button type="button" class="size-guide-btn" onclick="openSizeGuide()">? Guide des tailles</button>
+            </div>
+            <div class="size-options">
+              <button class="size-btn" data-size="S">S</button>
+              <button class="size-btn" data-size="M">M</button>
+              <button class="size-btn" data-size="L">L</button>
+              <button class="size-btn" data-size="XL">XL</button>
+            </div>
+            <span id="sizeError" style="color:red;display:none;font-size:0.9rem;margin-top:0.5rem;">Veuillez sélectionner une taille</span>
+          </div>
+
+          <button id="modalAddToCart" class="btn-add-to-cart">Ajouter au panier</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
