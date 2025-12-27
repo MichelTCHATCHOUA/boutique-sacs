@@ -6,6 +6,90 @@ function isStaticMode(){
   return !API_BASE;
 }
 
+// ========== LOYALTY PROGRAM MANAGEMENT ==========
+function generateReferralCode(email){
+  return 'DAP' + email.substring(0, 3).toUpperCase() + Math.random().toString(36).substr(2, 6).toUpperCase();
+}
+
+function loadLoyaltyData(email){
+  const data = JSON.parse(localStorage.getItem(`loyalty_${email}`)) || {
+    points: 0,
+    totalEarned: 0,
+    totalSpent: 0,
+    level: 'Bronze',
+    purchases: 0,
+    referralCode: generateReferralCode(email),
+    referrals: [],
+    referralBonusPoints: 0
+  };
+  return data;
+}
+
+function saveLoyaltyData(email, data){
+  localStorage.setItem(`loyalty_${email}`, JSON.stringify(data));
+}
+
+function getLoyaltyLevel(points){
+  if(points < 500) return 'Bronze';
+  if(points < 1000) return 'Argent';
+  return 'Or';
+}
+
+function getPointsMultiplier(level){
+  if(level === 'Argent') return 1.5;
+  if(level === 'Or') return 2;
+  return 1;
+}
+
+function addLoyaltyPoints(email, amount, reason = 'achat'){
+  const loyalty = loadLoyaltyData(email);
+  const multiplier = getPointsMultiplier(loyalty.level);
+  const pointsToAdd = Math.round(amount * multiplier);
+  
+  loyalty.points += pointsToAdd;
+  loyalty.totalEarned += pointsToAdd;
+  loyalty.level = getLoyaltyLevel(loyalty.points);
+  
+  if(reason === 'achat') loyalty.purchases += 1;
+  
+  saveLoyaltyData(email, loyalty);
+  return pointsToAdd;
+}
+
+function redeemLoyaltyPoints(email, pointsToRedeem){
+  const loyalty = loadLoyaltyData(email);
+  if(loyalty.points >= pointsToRedeem){
+    loyalty.points -= pointsToRedeem;
+    loyalty.totalSpent += pointsToRedeem;
+    saveLoyaltyData(email, loyalty);
+    return true;
+  }
+  return false;
+}
+
+function addReferralBonus(email, referredEmail){
+  const loyalty = loadLoyaltyData(email);
+  
+  // Check if already referred
+  if(loyalty.referrals.includes(referredEmail)) return false;
+  
+  loyalty.referrals.push(referredEmail);
+  loyalty.points += 50; // Bonus for referrer
+  loyalty.totalEarned += 50;
+  loyalty.referralBonusPoints += 50;
+  loyalty.level = getLoyaltyLevel(loyalty.points);
+  
+  saveLoyaltyData(email, loyalty);
+  
+  // Give bonus to referred person
+  const referredLoyalty = loadLoyaltyData(referredEmail);
+  referredLoyalty.points += 30; // Bonus for referred
+  referredLoyalty.totalEarned += 30;
+  saveLoyaltyData(referredEmail, referredLoyalty);
+  
+  return true;
+}
+
 // Update phone code based on country selection
 function updatePhoneCode(select){
   const code = select.value.split('|')[0];
@@ -193,6 +277,20 @@ function updateUserUI(){
       document.getElementById('userDisplayEmail').textContent = user.email;
       document.getElementById('userDisplayCountry').textContent = user.country || 'Non spécifié';
       document.getElementById('userDisplayPhone').textContent = user.phone || 'Non spécifié';
+      
+      // Update loyalty info
+      const loyalty = loadLoyaltyData(user.email);
+      const loyaltyPoints = document.getElementById('loyaltyPoints');
+      if(loyaltyPoints) loyaltyPoints.textContent = loyalty.points;
+      
+      const totalEarned = document.getElementById('totalPointsEarned');
+      if(totalEarned) totalEarned.textContent = loyalty.totalEarned;
+      
+      const totalSpent = document.getElementById('totalPointsSpent');
+      if(totalSpent) totalSpent.textContent = loyalty.totalSpent;
+      
+      const levelSpan = document.getElementById('loyaltyLevel');
+      if(levelSpan) levelSpan.textContent = loyalty.level;
     }
     // Hide auth tabs
     const authTabs = document.querySelector('.auth-tabs');
@@ -500,6 +598,193 @@ function closeSizeGuide(){
   if(modal) modal.style.display = 'none';
 }
 
+function openLoyaltyModal(){
+  const user = getCurrentUser();
+  if(!user) return;
+  
+  const modal = document.getElementById('loyaltyModal');
+  if(modal){
+    const loyalty = loadLoyaltyData(user.email);
+    document.getElementById('modalPoints').textContent = loyalty.points;
+    document.getElementById('modalLevel').textContent = loyalty.level;
+    document.getElementById('modalPurchases').textContent = loyalty.purchases;
+    modal.style.display = 'flex';
+  }
+}
+
+function closeLoyaltyModal(){
+  const modal = document.getElementById('loyaltyModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function openReferralModal(){
+  const user = getCurrentUser();
+  if(!user) return;
+  
+  const modal = document.getElementById('referralModal');
+  if(modal){
+    const loyalty = loadLoyaltyData(user.email);
+    document.getElementById('referralCode').value = loyalty.referralCode;
+    document.getElementById('referralCount').textContent = loyalty.referrals.length;
+    document.getElementById('referralBonusPoints').textContent = loyalty.referralBonusPoints;
+    
+    // Update referral history
+    const historyList = document.getElementById('referralHistoryList');
+    if(loyalty.referrals.length > 0){
+      historyList.innerHTML = loyalty.referrals.map((email, idx) => 
+        `<div style="padding:0.8rem;border-bottom:1px solid #e6e9f2"><div style="color:#0b1324;font-weight:700">${idx+1}. ${email}</div><div style="color:#999;font-size:0.85rem">+50 points gagnés</div></div>`
+      ).join('');
+    } else {
+      historyList.innerHTML = '<p style="color:#999;text-align:center;padding:1rem">Aucun parrainage pour le moment</p>';
+    }
+    
+    modal.style.display = 'flex';
+  }
+}
+
+function closeReferralModal(){
+  const modal = document.getElementById('referralModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function copyReferralCode(){
+  const code = document.getElementById('referralCode').value;
+  navigator.clipboard.writeText(code).then(() => {
+    const button = event.target;
+    const originalText = button.textContent;
+    button.textContent = '✓ Copié !';
+    setTimeout(() => {
+      button.textContent = originalText;
+    }, 2000);
+  });
+}
+
+function redeemPoints(pointsAmount){
+  const user = getCurrentUser();
+  if(!user) return;
+  
+  if(redeemLoyaltyPoints(user.email, pointsAmount)){
+    updateUserUI();
+    alert(`✓ ${pointsAmount} points convertis avec succès !`);
+    closeLoyaltyModal();
+  } else {
+    alert(`❌ Vous n'avez pas assez de points. Il vous en manque ${pointsAmount - loadLoyaltyData(user.email).points}`);
+  }
+}
+
+function openCheckoutModal(){
+  const user = getCurrentUser();
+  if(!user){
+    alert('Veuillez vous connecter pour continuer.');
+    openUserModal();
+    return;
+  }
+  const modal = document.getElementById('checkoutModal');
+  if(modal){
+    modal.style.display = 'flex';
+    updateCheckoutReview();
+  }
+}
+
+function closeCheckoutModal(){
+  const modal = document.getElementById('checkoutModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function switchCheckoutTab(tab){
+  // Hide all tabs
+  document.getElementById('shippingTab').style.display = 'none';
+  document.getElementById('paymentTab').style.display = 'none';
+  document.getElementById('reviewTab').style.display = 'none';
+  
+  // Remove active from all buttons
+  document.querySelectorAll('.checkout-tab-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Show selected tab
+  const selectedTab = document.getElementById(tab + 'Tab');
+  if(selectedTab) selectedTab.style.display = 'block';
+  
+  // Add active to clicked button
+  event.target.classList.add('active');
+}
+
+function updateCheckoutReview(){
+  const cart = loadCart();
+  const total = getCartTotal();
+  document.getElementById('reviewSubtotal').textContent = '€' + total;
+  document.getElementById('reviewTotal').textContent = '€' + total;
+}
+
+function completeCheckout(){
+  const paymentForm = document.getElementById('paymentForm');
+  const shippingForm = document.getElementById('shippingForm');
+  
+  // Validate forms
+  if(!shippingForm.checkValidity() || !paymentForm.checkValidity()){
+    alert('Veuillez remplir tous les champs requis.');
+    return;
+  }
+  
+  // Get card number and mask it
+  const cardInput = paymentForm.querySelector('input[type="text"]');
+  const cardNumber = cardInput.value.replace(/\s/g, '');
+  
+  if(cardNumber.length < 13){
+    alert('Numéro de carte invalide.');
+    return;
+  }
+  
+  // Process checkout
+  const user = getCurrentUser();
+  const cart = loadCart();
+  const total = getCartTotal();
+  
+  // Create order object
+  const order = {
+    orderId: 'DAP-' + Date.now(),
+    userId: user.email,
+    items: cart,
+    total: total,
+    date: new Date().toLocaleDateString('fr-FR'),
+    status: 'completed'
+  };
+  
+  // Save order (in real app, would send to backend)
+  let orders = JSON.parse(localStorage.getItem('orders')) || [];
+  orders.push(order);
+  localStorage.setItem('orders', JSON.stringify(orders));
+  
+  // Add loyalty points for purchase
+  const pointsEarned = addLoyaltyPoints(user.email, total, 'achat');
+  
+  // Clear cart
+  localStorage.removeItem('cart');
+  
+  // Show success message with loyalty points
+  const modal = document.getElementById('checkoutModal');
+  const content = modal.querySelector('.modal-content');
+  content.innerHTML = `
+    <button class="modal-close" onclick="closeCheckoutModal()">&times;</button>
+    <div style="text-align:center;padding:2rem">
+      <div style="font-size:3rem;margin-bottom:1rem">✓</div>
+      <h2 style="color:#4ade80;margin:0 0 1rem 0">Commande confirmée !</h2>
+      <p style="color:#556;margin:0 0 1rem 0">Merci pour votre achat.</p>
+      <p style="color:#999;font-size:0.9rem;margin:0 0 1rem 0">Numéro de commande: <strong>${order.orderId}</strong></p>
+      <div style="background:linear-gradient(135deg,#6c5ce7,#00b4d8);color:#fff;padding:1rem;border-radius:10px;margin:1rem 0">
+        <p style="margin:0;font-size:0.9rem">🎁 Vous avez gagné</p>
+        <p style="margin:0.5rem 0 0 0;font-size:1.8rem;font-weight:900">${pointsEarned} points</p>
+      </div>
+      <p style="color:#556;margin:1.5rem 0">Un email de confirmation a été envoyé à ${user.email}</p>
+      <button onclick="location.href='#sacs'; closeCheckoutModal()" class="btn-next" style="width:100%">Retour à la boutique</button>
+    </div>
+  `;
+  
+  // Reset cart UI after a delay
+  setTimeout(() => {
+    updateCartUI();
+  }, 2000);
+}
+
 // Size button selection
 document.addEventListener('DOMContentLoaded', function(){
   // Color button selection
@@ -697,4 +982,102 @@ document.addEventListener('DOMContentLoaded', function(){
   // Initialize cart and user UI
   updateCartUI();
   updateUserUI();
+
+  // Scroll progress bar
+  window.addEventListener('scroll', () => {
+    const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    const progressBar = document.querySelector('.scroll-progress');
+    if(progressBar) progressBar.style.width = scrollPercentage + '%';
+  });
+
+  // Newsletter form
+  const newsletterForm = document.getElementById('newsletterForm');
+  if(newsletterForm){
+    newsletterForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      const button = this.querySelector('button');
+      const originalText = button.textContent;
+      button.textContent = '✓ Merci de votre inscription !';
+      button.style.background = '#4ade80';
+      this.reset();
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '#fff';
+      }, 3000);
+    });
+  }
+
+  // Filter and Search Functions
+  window.filterProducts = function(){
+    const searchInput = document.getElementById('searchInput').value.toLowerCase();
+    const sortSelect = document.getElementById('sortSelect').value;
+    const priceRange = parseInt(document.getElementById('priceRange').value);
+    const typeFilters = Array.from(document.querySelectorAll('.filter-type:checked')).map(el => el.value);
+    const materialFilters = Array.from(document.querySelectorAll('.filter-material:checked')).map(el => el.value);
+    
+    // Update price display
+    document.getElementById('priceValue').textContent = priceRange;
+    
+    let products = Array.from(document.querySelectorAll('.product'));
+    
+    // Filter products
+    products = products.filter(product => {
+      const name = product.dataset.name.toLowerCase();
+      const price = parseInt(product.dataset.price);
+      const type = product.dataset.type;
+      const material = product.dataset.material;
+      
+      // Search filter
+      const matchSearch = name.includes(searchInput);
+      
+      // Price filter
+      const matchPrice = price <= priceRange;
+      
+      // Type filter
+      const matchType = typeFilters.length === 0 || typeFilters.includes(type);
+      
+      // Material filter
+      const matchMaterial = materialFilters.length === 0 || materialFilters.includes(material);
+      
+      return matchSearch && matchPrice && matchType && matchMaterial;
+    });
+    
+    // Sort products
+    if(sortSelect === 'price-asc'){
+      products.sort((a, b) => parseInt(a.dataset.price) - parseInt(b.dataset.price));
+    } else if(sortSelect === 'price-desc'){
+      products.sort((a, b) => parseInt(b.dataset.price) - parseInt(a.dataset.price));
+    } else if(sortSelect === 'popular'){
+      products.sort((a, b) => parseInt(b.dataset.popularity) - parseInt(a.dataset.popularity));
+    } else if(sortSelect === 'newest'){
+      products.sort((a, b) => parseInt(b.dataset.id) - parseInt(a.dataset.id));
+    }
+    
+    // Update display
+    const container = document.querySelector('.products');
+    container.innerHTML = '';
+    
+    if(products.length === 0){
+      container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#999;padding:2rem">Aucun produit ne correspond à vos critères</p>';
+    } else {
+      products.forEach(product => {
+        container.appendChild(product);
+        // Re-attach event listeners
+        product.querySelector('img').onclick = () => openProductModal(parseInt(product.dataset.id), product.dataset.name, product.dataset.price, product.dataset.description);
+        product.querySelector('.buy').onclick = () => openProductModal(parseInt(product.dataset.id), product.dataset.name, product.dataset.price, product.dataset.description);
+      });
+    }
+  };
+
+  window.resetFilters = function(){
+    document.getElementById('searchInput').value = '';
+    document.getElementById('sortSelect').value = 'popular';
+    document.getElementById('priceRange').value = 200;
+    document.getElementById('priceValue').textContent = 200;
+    document.querySelectorAll('.filter-type').forEach(el => el.checked = false);
+    document.querySelectorAll('.filter-material').forEach(el => el.checked = false);
+    filterProducts();
+  };
 });
+

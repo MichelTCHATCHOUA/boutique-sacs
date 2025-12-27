@@ -32,6 +32,7 @@ header a:hover{ background: rgba(255,255,255,0.08) }
 
 /* Cart Modal Styles */
 .cart-modal-content{ max-width:600px }
+.checkout-modal-content{ max-width:700px }
 .cart-items{ max-height:400px; overflow-y:auto; border:1px solid #e6e9f2; border-radius:10px; padding:1rem }
 .cart-item{ display:grid; grid-template-columns:1fr auto; gap:1.5rem; padding:1rem; border-bottom:1px solid #f0f0f0; align-items:start }
 .cart-item-info h4{ margin:0 0 0.5rem 0; color:#0b1324 }
@@ -157,6 +158,27 @@ section.fade-in{ opacity:1; transform:translateY(0) }
 
 .section-title{ text-align:center; margin:2.5rem 0 1rem; font-size:1.7rem; color:#0b1324 }
 
+/* Filter and Search Styles */
+.filters-wrapper{ background:#fff; padding:1.5rem; border-radius:12px; margin-bottom:2rem; box-shadow:0 4px 15px rgba(12,13,20,0.05) }
+.search-bar{ margin-bottom:1.5rem }
+.search-bar input{ width:100%; padding:0.9rem 1rem; border:2px solid #e6e9f2; border-radius:10px; font-size:1rem; transition:.3s }
+.search-bar input:focus{ outline:none; border-color:#6c5ce7; box-shadow:0 0 0 3px rgba(108,92,231,0.1) }
+
+.filters-container{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; align-items:start }
+.filter-group{ display:flex; flex-direction:column; gap:0.6rem }
+.filter-group label{ font-weight:700; color:#0b1324; font-size:0.95rem }
+.filter-group select{ padding:0.7rem; border:1px solid #e6e9f2; border-radius:8px; font-size:0.9rem; cursor:pointer; background:#fff }
+.filter-options{ display:flex; flex-direction:column; gap:0.5rem }
+.filter-options label{ font-weight:400; color:#556; display:flex; align-items:center; gap:0.5rem; cursor:pointer }
+.filter-options input[type="checkbox"]{ width:18px; height:18px; cursor:pointer; accent-color:#6c5ce7 }
+
+.price-range-wrapper{ display:flex; flex-direction:column; gap:0.5rem }
+.price-range-wrapper input[type="range"]{ width:100%; height:6px; cursor:pointer; accent-color:#6c5ce7 }
+.price-display{ font-weight:600; color:#0b1324; font-size:0.9rem }
+
+.btn-reset-filters{ padding:0.7rem 1rem; background:#ff6b6b; color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:.3s }
+.btn-reset-filters:hover{ background:#ff5252; transform:translateY(-2px) }
+
 .products{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem }
 .product{ background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(12,13,20,0.06); transition:transform .25s, box-shadow .25s; }
 .product:hover{ transform:translateY(-12px) scale(1.02); box-shadow:0 20px 50px rgba(12,13,20,0.15) }
@@ -174,9 +196,18 @@ section.fade-in{ opacity:1; transform:translateY(0) }
 .about .img{ width:320px; border-radius:12px; overflow:hidden }
 
 .reviews{ margin-top:2rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem }
-.review{ background:#fff; padding:1rem; border-radius:12px; box-shadow:0 8px 25px rgba(12,13,20,0.05) }
+.review{ background:#fff; padding:1rem; border-radius:12px; box-shadow:0 8px 25px rgba(12,13,20,0.05); transition:.3s }
+.review:hover{ transform:translateY(-4px); box-shadow:0 12px 35px rgba(12,13,20,0.1) }
 .review p{ font-size:0.95rem; color:#333 }
 .review .name{ margin-top:0.6rem; color:#0b1324; font-weight:700 }
+.review .rating{ margin-top:0.5rem; color:#ffc107; font-size:0.85rem }
+
+.newsletter{ margin-top:2rem; background:linear-gradient(135deg,#6c5ce7,#00b4d8); padding:2.5rem; border-radius:16px; color:#fff; text-align:center }
+.newsletter h3{ color:#fff; margin-top:0 }
+.newsletter-form{ display:flex; gap:0.8rem; max-width:500px; margin:0 auto }
+.newsletter-form input{ flex:1; padding:0.8rem; border:none; border-radius:8px; font-size:1rem; outline:none }
+.newsletter-form button{ padding:0.8rem 1.5rem; background:#fff; color:#6c5ce7; border:none; border-radius:8px; font-weight:700; cursor:pointer; transition:.3s }
+.newsletter-form button:hover{ transform:scale(1.05); box-shadow:0 4px 15px rgba(0,0,0,0.2) }
 
 .contact{ margin-top:2rem; background:#fff; padding:1.2rem; border-radius:12px; box-shadow:0 8px 30px rgba(12,13,20,0.06) }
 .contact form{ display:grid; grid-template-columns:1fr 1fr; gap:0.8rem }
@@ -186,4 +217,119 @@ section.fade-in{ opacity:1; transform:translateY(0) }
 
 footer{ margin-top:2.5rem; padding:1.2rem; text-align:center; color:#fff; background:#0b1324 }
 
-@media(max-width:900px){ .hero{ flex-direction:column; gap:1rem } .hero-image{ width:100% } .about{ flex-direction:column } .contact form{ grid-template-columns:1fr } .contact .send{ grid-column:1/2 } }
+/* Scroll Progress Bar */
+.scroll-progress{ position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg,#6c5ce7,#00b4d8); width:0%; z-index:999; transition:width .1s ease-out }
+
+/* Image Zoom Effect */
+.product img{ position:relative; }
+.product img:hover{ opacity:0.85; transform:scale(1.08); }
+
+/* Ripple Effect for Buttons */
+button.ripple { position:relative; overflow:hidden }
+button.ripple::before { content:''; position:absolute; top:50%; left:50%; width:0; height:0; border-radius:50%; background:rgba(255,255,255,0.5); transform:translate(-50%,-50%); }
+button.ripple:active::before { animation:ripple-animation .6s ease-out; }
+@keyframes ripple-animation { to { width:300px; height:300px; opacity:0 } }
+
+/* Smooth page transition */
+body { animation:fadeIn .5s ease-in; }
+@keyframes fadeIn { from { opacity:0.95; } to { opacity:1; } }
+
+/* Product card enhanced hover */
+.product { transition:all .3s cubic-bezier(.25,.46,.45,.94); }
+.product:hover { transform:translateY(-12px) scale(1.02); }
+
+/* Button hover effects */
+.btn-auth, .btn-add-to-cart, .btn-checkout, .contact .send { position:relative; }
+.btn-auth:hover, .btn-add-to-cart:hover, .btn-checkout:hover, .contact .send:hover { box-shadow:0 8px 20px rgba(108,92,231,0.4); }
+
+/* Checkout Modal Styles */
+.checkout-tabs{ display:flex; gap:0.5rem; margin-bottom:1.5rem; border-bottom:2px solid #e6e9f2; flex-wrap:wrap }
+.checkout-tab-btn{ background:none; border:none; padding:1rem 0.5rem; font-weight:600; color:#999; cursor:pointer; border-bottom:3px solid transparent; transition:.2s; font-size:0.9rem }
+.checkout-tab-btn.active{ color:#6c5ce7; border-bottom-color:#6c5ce7 }
+.checkout-tab{ display:none }
+.checkout-tab.active{ display:block }
+.checkout-tab form{ display:flex; flex-direction:column; gap:0.8rem }
+.checkout-tab input, .checkout-tab textarea{ padding:0.8rem; border:1px solid #e6e9f2; border-radius:8px; font-size:1rem }
+.checkout-tab label{ display:flex; align-items:center; gap:0.5rem; color:#556 }
+.btn-next, .btn-back, .btn-complete-order{ padding:0.9rem; background:linear-gradient(90deg,#6c5ce7,#00b4d8); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; transition:.3s }
+.btn-next:hover, .btn-back:hover, .btn-complete-order:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(108,92,231,0.3) }
+.btn-back{ background:#999; width:100% }
+.btn-complete-order{ width:100%; font-size:1.05rem; background:linear-gradient(90deg,#4ade80,#22c55e) }
+.btn-complete-order:hover{ box-shadow:0 8px 20px rgba(74,222,128,0.3) }
+
+.payment-methods{ display:grid; grid-template-columns:1fr; gap:1rem }
+.payment-method{ display:flex; cursor:pointer }
+.payment-method input[type="radio"]{ margin:0; width:20px; height:20px; cursor:pointer }
+.method-card{ flex:1; padding:1rem; border:2px solid #e6e9f2; border-radius:8px; transition:.3s; background:#f9fafc }
+.method-title{ font-weight:700; color:#0b1324; margin-bottom:0.3rem }
+.method-desc{ font-size:0.85rem; color:#999 }
+.payment-method input[type="radio"]:checked + .method-card{ border-color:#6c5ce7; background:#f0ebf9; box-shadow:0 0 0 3px rgba(108,92,231,0.1) }
+
+.order-summary-item{ display:flex; justify-content:space-between; padding:0.6rem 0; color:#556 }
+.order-summary-item strong{ color:#0b1324 }
+
+
+/* Loyalty Program Styles */
+.loyalty-card{ background:linear-gradient(135deg,#6c5ce7,#00b4d8); color:#fff; padding:1.5rem; border-radius:12px; margin-top:1.5rem }
+.loyalty-card h3{ margin:0 0 1rem 0 }
+.points-display{ display:flex; align-items:center; gap:1rem; margin-bottom:1rem }
+.points-value{ font-size:2.5rem; font-weight:900; line-height:1 }
+.points-label{ font-size:0.9rem; opacity:0.9 }
+.loyalty-info{ background:rgba(255,255,255,0.15); padding:1rem; border-radius:8px; margin-bottom:1rem }
+.loyalty-info p{ margin:0.5rem 0; font-size:0.9rem }
+.loyalty-info strong{ opacity:1 }
+.btn-loyalty{ background:#fff; color:#6c5ce7; border:none; padding:0.7rem 1rem; border-radius:8px; font-weight:700; cursor:pointer; transition:.3s }
+.btn-loyalty:hover{ transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.2) }
+
+/* Loyalty Modal Details */
+.loyalty-details{ display:flex; flex-direction:column; gap:2rem }
+.loyalty-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem }
+.stat-box{ background:#f9fafc; padding:1.2rem; border-radius:12px; text-align:center }
+.stat-value{ font-size:1.8rem; font-weight:900; color:#6c5ce7; margin-bottom:0.5rem }
+.stat-label{ font-size:0.85rem; color:#999; font-weight:600 }
+
+/* Loyalty Tiers */
+.loyalty-tiers h3{ margin-top:0 }
+.tier{ display:flex; gap:1rem; padding:1rem; border:2px solid #e6e9f2; border-radius:10px; margin-bottom:0.8rem; align-items:flex-start }
+.tier-badge{ padding:0.5rem 1rem; border-radius:6px; font-weight:700; font-size:0.85rem; white-space:nowrap }
+.tier-badge.bronze{ background:#d4a574; color:#fff }
+.tier-badge.silver{ background:#c0c0c0; color:#333 }
+.tier-badge.gold{ background:#ffd700; color:#333 }
+.tier-info{ flex:1 }
+.tier-info p{ margin:0.3rem 0; font-size:0.9rem; color:#556 }
+.tier-info strong{ color:#0b1324 }
+
+/* Redemption Section */
+.redemption-section h3{ margin-top:0 }
+.redemption-options{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem }
+.redemption-item{ background:linear-gradient(135deg,#f0ebf9,#e8f8ff); border:2px solid #6c5ce7; border-radius:10px; padding:1rem; text-align:center; cursor:pointer; transition:.3s }
+.redemption-item:hover{ transform:translateY(-4px); box-shadow:0 8px 20px rgba(108,92,231,0.2) }
+.redemption-points{ font-size:1.4rem; font-weight:900; color:#6c5ce7; margin-bottom:0.5rem }
+.redemption-reward{ font-weight:700; color:#0b1324 }
+
+/* Referral Program Styles */
+.referral-container{ display:flex; flex-direction:column; gap:1.5rem }
+.referral-intro{ background:#f9fafc; padding:1rem; border-radius:10px; border-left:4px solid #6c5ce7 }
+
+.referral-code-section h3{ margin-top:0 }
+.referral-code-box{ display:flex; gap:0.5rem; margin-bottom:1rem }
+.referral-code-box input{ flex:1; padding:0.8rem; border:2px solid #e6e9f2; border-radius:8px; font-size:0.95rem; font-weight:600; color:#0b1324; background:#f9fafc }
+.btn-copy{ background:#6c5ce7; color:#fff; border:none; padding:0.8rem 1rem; border-radius:8px; font-weight:700; cursor:pointer; transition:.3s }
+.btn-copy:hover{ background:#00b4d8 }
+
+.referral-stats{ display:grid; grid-template-columns:1fr 1fr; gap:1rem }
+.ref-stat{ background:linear-gradient(135deg,#6c5ce7,#00b4d8); color:#fff; padding:1.5rem; border-radius:12px; text-align:center }
+.ref-stat-value{ font-size:2rem; font-weight:900; margin-bottom:0.5rem }
+.ref-stat-label{ font-size:0.9rem; opacity:0.9 }
+
+/* Referral Benefits */
+.referral-benefits h3{ margin-top:0 }
+.benefit-item{ display:flex; gap:1rem; padding:1rem; background:#f9fafc; border-radius:10px; margin-bottom:0.8rem }
+.benefit-icon{ font-size:1.8rem; min-width:40px; text-align:center }
+.benefit-text strong{ color:#0b1324 }
+.benefit-text p{ margin:0.3rem 0; color:#556; font-size:0.9rem }
+
+/* Referral History */
+.referral-history h3{ margin-top:0 }
+
+@media(max-width:700px){ .checkout-tabs{ font-size:0.8rem } .checkout-tab-btn{ padding:0.8rem 0.3rem } .filters-container{ grid-template-columns:1fr } .search-bar input{ font-size:1rem } .loyalty-stats{ grid-template-columns:1fr } .redemption-options{ grid-template-columns:1fr } .referral-stats{ grid-template-columns:1fr } }

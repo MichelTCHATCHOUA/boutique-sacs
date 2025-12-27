@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="scroll-progress"></div>
   <div class="promo-banner">
     <p>🎉 <strong>-20% sur toute la collection hiver</strong> avec le code <strong>HIVER20</strong></p>
   </div>
@@ -59,8 +60,57 @@
   <main>
     <section id="sacs">
       <h3 class="section-title">Nos produits</h3>
+      
+      <!-- Search and Filter Bar -->
+      <div class="filters-wrapper">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="🔍 Rechercher un sac..." onkeyup="filterProducts()">
+        </div>
+        
+        <div class="filters-container">
+          <div class="filter-group">
+            <label>Tri :</label>
+            <select id="sortSelect" onchange="filterProducts()">
+              <option value="popular">Popularité</option>
+              <option value="price-asc">Prix croissant</option>
+              <option value="price-desc">Prix décroissant</option>
+              <option value="newest">Nouveautés</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Type :</label>
+            <div class="filter-options">
+              <label><input type="checkbox" class="filter-type" value="À main" onchange="filterProducts()"> À main</label>
+              <label><input type="checkbox" class="filter-type" value="À dos" onchange="filterProducts()"> À dos</label>
+              <label><input type="checkbox" class="filter-type" value="Voyage" onchange="filterProducts()"> Voyage</label>
+              <label><input type="checkbox" class="filter-type" value="Pochette" onchange="filterProducts()"> Pochette</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label>Matière :</label>
+            <div class="filter-options">
+              <label><input type="checkbox" class="filter-material" value="Cuir" onchange="filterProducts()"> Cuir</label>
+              <label><input type="checkbox" class="filter-material" value="Toile" onchange="filterProducts()"> Toile</label>
+              <label><input type="checkbox" class="filter-material" value="Synthétique" onchange="filterProducts()"> Synthétique</label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label>Prix :</label>
+            <div class="price-range-wrapper">
+              <input type="range" id="priceRange" min="0" max="200" value="200" onchange="filterProducts()">
+              <div class="price-display">€0 - €<span id="priceValue">200</span></div>
+            </div>
+          </div>
+
+          <button class="btn-reset-filters" onclick="resetFilters()">Réinitialiser</button>
+        </div>
+      </div>
+
       <div class="products">
-        <article class="product" data-id="1" data-name="Sac à main en cuir" data-price="89" data-description="Sac à main premium en cuir véritable. Dimensions: 35x28x12cm. Poche intérieure zippée, finitions soignées, anse ajustable. Parfait pour le travail et sorties. Garanti 2 ans.">
+        <article class="product" data-id="1" data-name="Sac à main en cuir" data-price="89" data-type="À main" data-material="Cuir" data-popularity="4" data-description="Sac à main premium en cuir véritable. Dimensions: 35x28x12cm. Poche intérieure zippée, finitions soignées, anse ajustable. Parfait pour le travail et sorties. Garanti 2 ans.">
           <img src="Images/SacMainCuir.png" alt="Sac à main cuir">
           <div class="info">
             <h4>Sac à main en cuir</h4>
@@ -69,7 +119,7 @@
           </div>
         </article>
 
-        <article class="product" data-id="2" data-name="Sac à dos sport" data-price="59" data-description="Sac à dos ergonomique et moderne. Dimensions: 45x30x15cm. Résistant à l'eau, compartiments multiples, bretelles rembourrées ajustables. Idéal pour le sport, les sorties et les randonnées. Capacité 25L.">
+        <article class="product" data-id="2" data-name="Sac à dos sport" data-price="59" data-type="À dos" data-material="Synthétique" data-popularity="5" data-description="Sac à dos ergonomique et moderne. Dimensions: 45x30x15cm. Résistant à l'eau, compartiments multiples, bretelles rembourrées ajustables. Idéal pour le sport, les sorties et les randonnées. Capacité 25L.">
           <img src="Images/SacDosSport.png" alt="Sac à dos sport">
           <div class="info">
             <h4>Sac à dos sport</h4>
@@ -78,7 +128,7 @@
           </div>
         </article>
 
-        <article class="product" data-id="3" data-name="Sac de voyage" data-price="119" data-description="Grand sac de voyage en toile résistante. Dimensions: 60x40x25cm. Capacité 65L, compartiments pratiques, design élégant et intemporel. Poignées renforcées, bretelle de transport. Parfait pour week-ends et voyages.">
+        <article class="product" data-id="3" data-name="Sac de voyage" data-price="119" data-type="Voyage" data-material="Toile" data-popularity="4" data-description="Grand sac de voyage en toile résistante. Dimensions: 60x40x25cm. Capacité 65L, compartiments pratiques, design élégant et intemporel. Poignées renforcées, bretelle de transport. Parfait pour week-ends et voyages.">
           <img src="Images/SacDeVoyage.png" alt="Sac de voyage">
           <div class="info">
             <h4>Sac de voyage</h4>
@@ -87,12 +137,57 @@
           </div>
         </article>
 
-        <article class="product" data-id="4" data-name="Sacs élégants collection" data-price="75" data-description="Collection exclusive de sacs élégants et intemporels. Dimensions: 40x30x15cm. Parfait pour toutes les occasions, du travail aux sorties. Matériaux de qualité premium, design sophistiqué. Disponible en plusieurs coloris.">
+        <article class="product" data-id="4" data-name="Sacs élégants collection" data-price="75" data-type="À main" data-material="Synthétique" data-popularity="3" data-description="Collection exclusive de sacs élégants et intemporels. Dimensions: 40x30x15cm. Parfait pour toutes les occasions, du travail aux sorties. Matériaux de qualité premium, design sophistiqué. Disponible en plusieurs coloris.">
           <img src="Images/SacsElegants.png" alt="Sacs élégants">
           <div class="info">
             <h4>Sacs élégants collection</h4>
             <p>Collection exclusive, design sophistiqué, tous les styles.</p>
             <div class="price-row"><div class="price">€75</div><button class="buy">Acheter</button></div>
+          </div>
+        </article>
+
+        <article class="product" data-id="5" data-name="Sac porté main premium" data-price="95" data-type="À main" data-material="Cuir" data-popularity="5" data-description="Sac à main premium en cuir véritable avec finitions luxe. Dimensions: 38x30x14cm. Double poches zippées, doublure satinée, anse ajustable en cuir. Idéal pour le travail élégant et sorties. Garantie 3 ans.">
+          <img src="Images/SacMainCuir.png" alt="Sac porté main">
+          <div class="info">
+            <h4>Sac porté main premium</h4>
+            <p>Cuir premium, doublure satinée, double poches zippées.</p>
+            <div class="price-row"><div class="price">€95</div><button class="buy">Acheter</button></div>
+          </div>
+        </article>
+
+        <article class="product" data-id="6" data-name="Sac à dos urban" data-price="65" data-type="À dos" data-material="Synthétique" data-popularity="4" data-description="Sac à dos urbain et pratique. Dimensions: 48x32x16cm. Poche pour laptop 15\", résistant à l'eau, bretelles ergonomiques. Parfait pour les trajets quotidiens et travail. Capacité 28L.">
+          <img src="Images/SacDosSport.png" alt="Sac à dos urban">
+          <div class="info">
+            <h4>Sac à dos urban</h4>
+            <p>Poche laptop, résistant à l'eau, design urbain moderne.</p>
+            <div class="price-row"><div class="price">€65</div><button class="buy">Acheter</button></div>
+          </div>
+        </article>
+
+        <article class="product" data-id="7" data-name="Grand sac week-end" data-price="129" data-type="Voyage" data-material="Toile" data-popularity="5" data-description="Grand sac week-end spacieux et robuste. Dimensions: 65x42x28cm. Compartiments multiples, poignées renforcées, fond renforcé. Capacité 70L, résistant pour tous les voyages. Disponible en noir et marron.">
+          <img src="Images/SacDeVoyage.png" alt="Sac week-end">
+          <div class="info">
+            <h4>Grand sac week-end</h4>
+            <p>Spacieux, robuste, compartiments multiples, fond renforcé.</p>
+            <div class="price-row"><div class="price">€129</div><button class="buy">Acheter</button></div>
+          </div>
+        </article>
+
+        <article class="product" data-id="8" data-name="Pochette élégante petit modèle" data-price="45" data-type="Pochette" data-material="Synthétique" data-popularity="3" data-description="Petite pochette élégante en cuir synthétique. Dimensions: 25x18x8cm. Fermeture éclair sécurisée, bandoulière amovible. Idéale pour essentiels et accessoires. Design minimaliste et intemporel.">
+          <img src="Images/SacsElegants.png" alt="Pochette élégante">
+          <div class="info">
+            <h4>Pochette élégante petit modèle</h4>
+            <p>Petite, élégante, bandoulière amovible, fermeture éclair.</p>
+            <div class="price-row"><div class="price">€45</div><button class="buy">Acheter</button></div>
+          </div>
+        </article>
+
+        <article class="product" data-id="9" data-name="Sac de randonnée professionnel" data-price="149" data-type="À dos" data-material="Synthétique" data-popularity="4" data-description="Sac de randonnée professionnel haute performance. Dimensions: 70x40x30cm. Système de ventilation dorsale, ceinture abdominale ajustable, plusieurs poches. Capacité 80L, très résistant pour expéditions.">
+          <img src="Images/SacDosSport.png" alt="Sac randonnée">
+          <div class="info">
+            <h4>Sac de randonnée professionnel</h4>
+            <p>Haute performance, ventilation dorsale, ceinture abdominale.</p>
+            <div class="price-row"><div class="price">€149</div><button class="buy">Acheter</button></div>
           </div>
         </article>
       </div>
@@ -132,10 +227,23 @@
     <section id="avis">
       <h3 class="section-title">Avis de nos clients</h3>
       <div class="reviews">
-        <div class="review"><p>Très beau sac, qualité excellente et livraison rapide.</p><div class="name">— Claire D.</div></div>
-        <div class="review"><p>Service client réactif et produit conforme à la description.</p><div class="name">— Marc T.</div></div>
-        <div class="review"><p>Design élégant et très pratique. Je recommande !</p><div class="name">— Amina R.</div></div>
+        <div class="review"><p>Très beau sac, qualité excellente et livraison rapide.</p><div class="name">— Claire D.</div><div class="rating">⭐⭐⭐⭐⭐</div></div>
+        <div class="review"><p>Service client réactif et produit conforme à la description.</p><div class="name">— Marc T.</div><div class="rating">⭐⭐⭐⭐⭐</div></div>
+        <div class="review"><p>Design élégant et très pratique. Je recommande !</p><div class="name">— Amina R.</div><div class="rating">⭐⭐⭐⭐⭐</div></div>
+        <div class="review"><p>Sac de qualité, très résistant et beau. Parfait pour les voyages.</p><div class="name">— Thomas L.</div><div class="rating">⭐⭐⭐⭐⭐</div></div>
+        <div class="review"><p>Livraison rapide, produit impeccable. Très satisfait de mon achat.</p><div class="name">— Sophie M.</div><div class="rating">⭐⭐⭐⭐⭐</div></div>
+        <div class="review"><p>Excellent rapport qualité-prix. Je l'ai recommandé à mes amis.</p><div class="name">— Jean B.</div><div class="rating">⭐⭐⭐⭐⭐</div></div>
       </div>
+    </section>
+
+    <section id="newsletter" class="newsletter">
+      <h3 class="section-title">Rejoignez notre communauté</h3>
+      <p style="text-align:center;color:#556;margin-bottom:1.5rem">Recevez 10% de réduction sur votre première commande et nos meilleures offres directement dans votre email.</p>
+      <form id="newsletterForm" class="newsletter-form">
+        <input type="email" placeholder="Votre email" required>
+        <button type="submit">S'abonner</button>
+      </form>
+      <p style="text-align:center;color:#999;font-size:0.85rem;margin-top:1rem">Nous respectons votre confidentialité. Désinscription facile à tout moment.</p>
     </section>
 
     <section id="contact" class="contact">
@@ -170,7 +278,100 @@
         <div class="cart-total"><span>Sous-total :</span> <strong id="subtotal">€0</strong></div>
         <div class="cart-total"><span>Livraison :</span> <strong>Gratuit</strong></div>
         <div class="cart-total" style="border-top:1px solid #e6e9f2;padding-top:1rem;margin-top:1rem;font-size:1.2rem"><span>Total :</span> <strong id="total">€0</strong></div>
-        <button class="btn-checkout">Procéder au paiement</button>
+        <button class="btn-checkout" onclick="openCheckoutModal()">Procéder au paiement</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeCheckoutModal()"></div>
+    <div class="modal-content checkout-modal-content">
+      <button class="modal-close" onclick="closeCheckoutModal()">&times;</button>
+      <h2 style="margin:0 0 1.5rem 0">Finaliser la commande</h2>
+      
+      <!-- Checkout Tabs -->
+      <div class="checkout-tabs">
+        <button class="checkout-tab-btn active" onclick="switchCheckoutTab('shipping')">📦 Adresse</button>
+        <button class="checkout-tab-btn" onclick="switchCheckoutTab('payment')">💳 Paiement</button>
+        <button class="checkout-tab-btn" onclick="switchCheckoutTab('review')">✓ Récapitulatif</button>
+      </div>
+
+      <!-- Shipping Tab -->
+      <div id="shippingTab" class="checkout-tab active">
+        <h3>Adresse de livraison</h3>
+        <form id="shippingForm">
+          <input type="text" placeholder="Adresse complète" required>
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:0.8rem">
+            <input type="text" placeholder="Ville" required>
+            <input type="text" placeholder="Code postal" required>
+          </div>
+          <input type="text" placeholder="Pays" required>
+          <input type="tel" placeholder="Téléphone de livraison" required>
+          <label style="display:flex;align-items:center;gap:0.5rem;color:#556"><input type="checkbox" checked> Utiliser la même adresse pour la facturation</label>
+          <button type="button" onclick="switchCheckoutTab('payment')" class="btn-next">Continuer vers le paiement →</button>
+        </form>
+      </div>
+
+      <!-- Payment Tab -->
+      <div id="paymentTab" class="checkout-tab" style="display:none;">
+        <h3>Méthode de paiement</h3>
+        <div class="payment-methods">
+          <label class="payment-method active">
+            <input type="radio" name="payment" value="card" checked>
+            <div class="method-card">
+              <div class="method-title">💳 Carte bancaire</div>
+              <div class="method-desc">Visa, Mastercard, Amex</div>
+            </div>
+          </label>
+          <label class="payment-method">
+            <input type="radio" name="payment" value="paypal">
+            <div class="method-card">
+              <div class="method-title">🅿️ PayPal</div>
+              <div class="method-desc">Paiement sécurisé PayPal</div>
+            </div>
+          </label>
+          <label class="payment-method">
+            <input type="radio" name="payment" value="transfer">
+            <div class="method-card">
+              <div class="method-title">🏦 Virement bancaire</div>
+              <div class="method-desc">Paiement par virement</div>
+            </div>
+          </label>
+        </div>
+
+        <form id="paymentForm" style="margin-top:1.5rem;">
+          <h4>Informations de la carte</h4>
+          <input type="text" placeholder="Numéro de carte" maxlength="19" required>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+            <input type="text" placeholder="MM/YY" required>
+            <input type="text" placeholder="CVC" maxlength="3" required>
+          </div>
+          <input type="text" placeholder="Nom du titulaire" required>
+          <label style="display:flex;align-items:center;gap:0.5rem;color:#556;margin-top:1rem"><input type="checkbox" required> Je confirme avoir lu les conditions d'utilisation</label>
+          <button type="button" onclick="switchCheckoutTab('review')" class="btn-next" style="margin-top:1rem">Vérifier la commande →</button>
+        </form>
+      </div>
+
+      <!-- Review Tab -->
+      <div id="reviewTab" class="checkout-tab" style="display:none;">
+        <h3>Récapitulatif de la commande</h3>
+        <div id="checkoutReview" style="background:#f9fafc;padding:1rem;border-radius:8px;margin:1rem 0">
+          <div class="order-summary-item">
+            <span>Produits</span>
+            <strong id="reviewSubtotal">€0</strong>
+          </div>
+          <div class="order-summary-item">
+            <span>Livraison</span>
+            <strong>Gratuit</strong>
+          </div>
+          <div class="order-summary-item" style="border-top:1px solid #e6e9f2;padding-top:0.8rem;margin-top:0.8rem;font-size:1.1rem">
+            <span>Total</span>
+            <strong id="reviewTotal">€0</strong>
+          </div>
+        </div>
+        <button type="button" onclick="completeCheckout()" class="btn-complete-order">✓ Confirmer la commande</button>
+        <button type="button" onclick="switchCheckoutTab('payment')" class="btn-back" style="margin-top:0.5rem">← Retour</button>
       </div>
     </div>
   </div>
@@ -230,14 +431,170 @@
 
       <!-- Logged In View -->
       <div id="loggedInView" style="display:none;">
-        <h2>Profil</h2>
+        <h2>Mon Profil</h2>
         <div class="user-info">
           <p><strong>Nom :</strong> <span id="userDisplayName"></span></p>
           <p><strong>Email :</strong> <span id="userDisplayEmail"></span></p>
           <p><strong>Pays :</strong> <span id="userDisplayCountry"></span></p>
           <p><strong>Téléphone :</strong> <span id="userDisplayPhone"></span></p>
         </div>
-        <button class="btn-logout" onclick="logout()">Se déconnecter</button>
+        
+        <!-- Loyalty Program Section -->
+        <div class="loyalty-card">
+          <h3 style="margin-top:0">🎁 Programme Fidélité</h3>
+          <div class="points-display">
+            <div class="points-value" id="loyaltyPoints">0</div>
+            <div class="points-label">Points</div>
+          </div>
+          <div class="loyalty-info">
+            <p><strong>Points gagnés :</strong> <span id="totalPointsEarned">0</span></p>
+            <p><strong>Points dépensés :</strong> <span id="totalPointsSpent">0</span></p>
+            <p><strong>Niveau :</strong> <span id="loyaltyLevel" style="color:#6c5ce7;font-weight:700">Bronze</span></p>
+          </div>
+          <button class="btn-loyalty" onclick="openLoyaltyModal()">Voir mon programme</button>
+        </div>
+
+        <div style="display:flex;gap:0.8rem;margin-top:1.5rem">
+          <button class="btn-loyalty" onclick="openReferralModal()" style="flex:1">👥 Parrainer</button>
+          <button class="btn-logout" onclick="logout()" style="flex:1">Se déconnecter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loyalty Program Modal -->
+  <div id="loyaltyModal" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeLoyaltyModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeLoyaltyModal()">&times;</button>
+      <h2>🎁 Mon Programme Fidélité</h2>
+      
+      <div class="loyalty-details">
+        <div class="loyalty-stats">
+          <div class="stat-box">
+            <div class="stat-value" id="modalPoints">0</div>
+            <div class="stat-label">Points actuels</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="modalLevel">Bronze</div>
+            <div class="stat-label">Niveau</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="modalPurchases">0</div>
+            <div class="stat-label">Achats</div>
+          </div>
+        </div>
+
+        <div class="loyalty-tiers">
+          <h3>Niveaux de Fidélité</h3>
+          <div class="tier">
+            <div class="tier-badge bronze">🥉 Bronze</div>
+            <div class="tier-info">
+              <p><strong>0 - 499 points</strong></p>
+              <p>1 point par €1 dépensé • Accès aux offres exclusives</p>
+            </div>
+          </div>
+          <div class="tier">
+            <div class="tier-badge silver">🥈 Argent</div>
+            <div class="tier-info">
+              <p><strong>500 - 999 points</strong></p>
+              <p>1.5 points par €1 dépensé • Livraison gratuite prioritaire • Réductions 5%</p>
+            </div>
+          </div>
+          <div class="tier">
+            <div class="tier-badge gold">🥇 Or</div>
+            <div class="tier-info">
+              <p><strong>1000+ points</strong></p>
+              <p>2 points par €1 dépensé • VIP support • Réductions 10% • Accès avant-première</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="redemption-section">
+          <h3>Rédemption de Points</h3>
+          <p style="color:#556;margin-bottom:1rem">Utilisez vos points pour obtenir des réductions</p>
+          <div class="redemption-options">
+            <div class="redemption-item" onclick="redeemPoints(100)">
+              <div class="redemption-points">100 pts</div>
+              <div class="redemption-reward">€5 réduction</div>
+            </div>
+            <div class="redemption-item" onclick="redeemPoints(250)">
+              <div class="redemption-points">250 pts</div>
+              <div class="redemption-reward">€15 réduction</div>
+            </div>
+            <div class="redemption-item" onclick="redeemPoints(500)">
+              <div class="redemption-points">500 pts</div>
+              <div class="redemption-reward">€35 réduction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Referral Program Modal -->
+  <div id="referralModal" class="modal" style="display:none;">
+    <div class="modal-overlay" onclick="closeReferralModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeReferralModal()">&times;</button>
+      <h2>👥 Système de Parrainage</h2>
+      
+      <div class="referral-container">
+        <div class="referral-intro">
+          <p style="color:#556;line-height:1.6">Parrainez vos amis et gagnez des points de bonus ! Vous et votre ami recevez des avantages exclusifs.</p>
+        </div>
+
+        <div class="referral-code-section">
+          <h3>Votre Code de Parrainage</h3>
+          <div class="referral-code-box">
+            <input type="text" id="referralCode" readonly>
+            <button class="btn-copy" onclick="copyReferralCode()">📋 Copier</button>
+          </div>
+          <p style="color:#999;font-size:0.85rem;text-align:center">Partagez ce code avec vos amis</p>
+        </div>
+
+        <div class="referral-stats">
+          <div class="ref-stat">
+            <div class="ref-stat-value" id="referralCount">0</div>
+            <div class="ref-stat-label">Amis parrainés</div>
+          </div>
+          <div class="ref-stat">
+            <div class="ref-stat-value" id="referralBonusPoints">0</div>
+            <div class="ref-stat-label">Points gagnés</div>
+          </div>
+        </div>
+
+        <div class="referral-benefits">
+          <h3>Avantages du Parrainage</h3>
+          <div class="benefit-item">
+            <div class="benefit-icon">🎁</div>
+            <div class="benefit-text">
+              <strong>Vous recevez</strong>
+              <p>50 points bonus pour chaque ami inscrit</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">🎉</div>
+            <div class="benefit-text">
+              <strong>Votre ami reçoit</strong>
+              <p>30 points de bienvenue + 10% sur sa 1ère commande</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">🌟</div>
+            <div class="benefit-text">
+              <strong>Progression rapide</strong>
+              <p>Atteignez les niveaux supérieurs plus vite</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="referral-history">
+          <h3>Historique de Parrainage</h3>
+          <div id="referralHistoryList" style="max-height:300px;overflow-y:auto">
+            <p style="color:#999;text-align:center;padding:1rem">Aucun parrainage pour le moment</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
