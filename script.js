@@ -234,7 +234,7 @@ function closeCartModal(){
   if(modal) modal.style.display = 'none';
 }
 
-function openMailTo(data){
+function loadUsers(){
   try{
     return JSON.parse(localStorage.getItem('users')) || [];
   }catch(e){ return [] }
@@ -899,86 +899,110 @@ document.addEventListener('DOMContentLoaded', function(){
   if(registerForm){
     registerForm.addEventListener('submit', function(e){
       e.preventDefault();
-      const inputs = this.querySelectorAll('input');
-      const select = this.querySelector('select');
+      console.log('Registration form submitted');
       
-      const firstName = inputs[0].value;
-      const lastName = inputs[1].value;
-      const email = inputs[2].value;
-      const countryValue = select.value;
-      const countryCode = countryValue.split('|')[0];
-      const countryName = countryValue.split('|')[1];
-      const phone = inputs[3].value;
-      const password = inputs[4].value;
-      const confirmPassword = inputs[5].value;
+      try {
+        // Get form inputs by specific selectors
+        const firstName = this.querySelector('input[type="text"]').value.trim();
+        const lastNameInput = this.querySelectorAll('input[type="text"]');
+        const lastName = lastNameInput[1].value.trim();
+        const email = this.querySelector('input[type="email"]').value.trim();
+        const select = this.querySelector('select');
+        const countryValue = select.value;
+        const phone = this.querySelector('input[type="tel"]').value.trim();
+        const passwordInputs = this.querySelectorAll('input[type="password"]');
+        const password = passwordInputs[0].value;
+        const confirmPassword = passwordInputs[1].value;
 
-      if(!firstName.trim()){
-        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le prénom est requis</p>';
-        return;
-      }
+        console.log('Form values:', { firstName, lastName, email, countryValue, phone });
 
-      if(!lastName.trim()){
-        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le nom est requis</p>';
-        return;
-      }
+        if(!firstName){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le prénom est requis</p>';
+          return;
+        }
 
-      if(!countryName){
-        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Veuillez sélectionner un pays</p>';
-        return;
-      }
+        if(!lastName){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le nom est requis</p>';
+          return;
+        }
 
-      if(!phone.trim()){
-        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le numéro de téléphone est requis</p>';
-        return;
-      }
+        if(!email){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">L\'email est requis</p>';
+          return;
+        }
 
-      if(password !== confirmPassword){
-        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Les mots de passe ne correspondent pas</p>';
-        return;
-      }
+        if(!countryValue || !countryValue.includes('|')){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">Veuillez sélectionner un pays</p>';
+          return;
+        }
 
-      if(password.length < 6){
-        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le mot de passe doit faire au moins 6 caractères</p>';
-        return;
-      }
+        if(!phone){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le numéro de téléphone est requis</p>';
+          return;
+        }
 
-      const users = loadUsers();
-      if(users.find(u => u.email === email)){
-        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Cet email est déjà utilisé</p>';
-        return;
-      }
+        if(!password || password.length < 6){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">Le mot de passe doit faire au moins 6 caractères</p>';
+          return;
+        }
 
-      // Store full phone with country code
-      const fullPhone = countryCode + phone;
+        if(password !== confirmPassword){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">Les mots de passe ne correspondent pas</p>';
+          return;
+        }
 
-      users.push({ 
-        firstName, 
-        lastName, 
-        email, 
-        country: countryName,
-        phone: fullPhone, 
-        password 
-      });
-      saveUsers(users);
-      setCurrentUser({ name: `${firstName} ${lastName}`, email, country: countryName, phone: fullPhone });
-      this.reset();
-      document.getElementById('registerMessage').innerHTML = '<p style="color:green">✓ Inscription réussie, bienvenue!</p>';
-      
-      // Check for pending cart item
-      const pendingItem = getPendingCartItem();
-      if(pendingItem){
-        addToCart(pendingItem.id, pendingItem.name, pendingItem.price, pendingItem.size, pendingItem.color, 1);
-        clearPendingCartItem();
-        setTimeout(() => {
-          closeUserModal();
-          alert(`${pendingItem.name} a été ajouté à votre panier! Continuez vos achats.`);
-        }, 500);
-      } else {
-        setTimeout(() => closeUserModal(), 1000);
+        const countryCode = countryValue.split('|')[0];
+        const countryName = countryValue.split('|')[1];
+
+        const users = loadUsers();
+        if(users.find(u => u.email === email)){
+          document.getElementById('registerMessage').innerHTML = '<p style="color:red">Cet email est déjà utilisé</p>';
+          return;
+        }
+
+        // Store full phone with country code
+        const fullPhone = countryCode + phone;
+
+        users.push({ 
+          firstName, 
+          lastName, 
+          email, 
+          country: countryName,
+          phone: fullPhone, 
+          password 
+        });
+        saveUsers(users);
+        setCurrentUser({ name: `${firstName} ${lastName}`, email, country: countryName, phone: fullPhone });
+        
+        // Initialize loyalty program for new user
+        loadLoyaltyData(email);
+        
+        this.reset();
+        document.getElementById('registerMessage').innerHTML = '<p style="color:green">✓ Inscription réussie, bienvenue!</p>';
+        
+        // Update UI immediately
+        updateUserUI();
+        
+        // Check for pending cart item
+        const pendingItem = getPendingCartItem();
+        if(pendingItem){
+          addToCart(pendingItem.id, pendingItem.name, pendingItem.price, pendingItem.size, pendingItem.color, 1);
+          clearPendingCartItem();
+          setTimeout(() => {
+            closeUserModal();
+            alert(`${pendingItem.name} a été ajouté à votre panier! Continuez vos achats.`);
+          }, 500);
+        } else {
+          setTimeout(() => {
+            closeUserModal();
+          }, 1000);
+        }
+      } catch(error) {
+        console.error('Registration error:', error);
+        document.getElementById('registerMessage').innerHTML = '<p style="color:red">Erreur lors de l\'inscription: ' + error.message + '</p>';
       }
     });
   }
-
   // Initialize cart and user UI
   updateCartUI();
   updateUserUI();
